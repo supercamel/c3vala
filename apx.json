@@ -1,0 +1,992 @@
+{
+	"project": {
+		"title": "APX Autopilot",
+		"description": "This is the protocol description used by the APX Autopilot",
+		"version": "0.1b"
+	},
+	"enums": [{
+		"title": "SERVO_CHANNEL",
+		"description": "RC servo channels",
+		"fields": [
+			"AILERON",
+			"ELEVATOR",
+			"THROTTLE",
+			"RUDDER",
+			"CH5"
+		]
+	},
+	{
+		"title": "AUTOPILOT_STATE",
+		"description": "The autopilot state",
+		"fields": [
+			"INITIALISING",
+			"ON_GROUND",
+			"ARMED",
+			"TAKEOFF",
+			"CLIMB_OUT",
+			"UAV_MODE",
+			"APPROACH",
+			"FLARE",
+			"ON_GND_MANUAL",
+			"MANUAL",
+			"GO_AROUND",
+			"ORBIT",
+			"FAULT",
+			"END_STATE"
+		]
+	},
+	{
+		"title": "AUTOPILOT_EVENT",
+		"description": "Events that can cause the autopilot state to transition",
+		"fields": [
+			"INITIALISATION_COMPLETE",
+			"ARM_MSG_RECEIVED",
+			"TAKEOFF_DETECTED",
+			"CLIMB_SPEED_REACHED",
+			"CLIMB_ALT_REACHED",
+			"MISSION_COMPLETE_ORBIT",
+            "MISSION_COMPLETE_LAND",
+			"FLARE_ALT_DETECTED",
+			"LOW_GND_SPEED",
+			"SWITCHED_TO_MANUAL",
+			"SWITCHED_TO_AUTO",
+			"FAULT_DETECTED",
+			"NIL_FAULTS_DETECTED",
+			"FAULT_HANDLER_TERMINATED",
+			"LAND_MSG_RECEIVED",
+			"GO_AROUND_MSG_RECEIVED",
+			"ORBIT_MSG_RECEIVED",
+			"ORBIT_TIMEOUT",
+			"RESUME_MISSION_MSG_RECEIVED",
+			"LOW_TAKEOFF_ACCELERATION",
+			"NO_VALID_NAV_INPUT",
+			"MANUAL_TAKEOFF_DETECTED",
+			"END_EVENT"
+		]
+	},
+	{
+		"title": "GPS_FIX_TYPE",
+		"description": "The GPS fix type is an indication the integrity of the GPS. No lock means it cannot be used for navigation. 2D and 3D are OK for navigation.",
+		"fields": [
+			"NO_LOCK",
+			"LOCK_2D",
+			"LOCK_3D",
+			"RTK",
+			"UNKNOWN"
+		]
+	},
+	{
+		"title": "AUTOPILOT_MODE",
+		"description": "The autopilot CIC mode",
+		"fields": [
+			"ARCADE",
+			"AUTO",
+			"UNKNOWN"
+		]
+	},
+	{
+		"title": "PID_LOOP",
+		"description": "PID loops",
+		"fields": [
+			"PITCH",
+			"ROLL",
+			"RUDDER",
+			"VERT_SPEED",
+			"HEADING_RATE",
+			"PITCH_AIRSPEED",
+			"THROTTLE_AIRSPEED",
+			"NO_LOOP"
+		]
+	},
+	{
+		"title": "FAULT",
+		"description": "Autopilot fault types",
+		"fields": [
+			"NO_NAV_INPUT",
+			"DATALINK_LOST",
+			"RC_RX_FAILED",
+			"SENSOR_FAILED"
+		]
+	},
+    {
+        "title": "ACTION",
+        "description": "The action to take once a route has completed",
+        "fields": [
+            "ORBIT",
+            "RETURN_HOME",
+            "REPEAT_FROM",
+            "LAND"
+        ]
+    }
+	],
+	"packets": [{
+		"title": "telemetry",
+		"description": "Telemetry packet",
+		"setting": "false",
+		"owner": "remote",
+		"ack_required": "false",
+		"fields": [{
+			"name": "latitude",
+			"type": "float"
+		},
+		{
+			"name": "longitude",
+			"type": "float"
+		},
+		{
+			"name": "ground_speed",
+			"type": "uint16_t"
+		},
+		{
+			"name": "gps_alt",
+			"type": "int32_t"
+		},
+		{
+			"name": "gps_track",
+			"type": "uint16_t"
+		},
+		{
+			"name": "quat_w",
+			"type": "int16_t"
+		},
+		{
+			"name": "quat_x",
+			"type": "int16_t"
+		},
+		{
+			"name": "quat_y",
+			"type": "int16_t"
+		},
+		{
+			"name": "quat_z",
+			"type": "int16_t"
+		},
+		{
+			"name": "airspeed",
+			"type": "uint16_t"
+		},
+		{
+			"name": "vertical_speed",
+			"type": "int16_t"
+		},
+		{
+			"name": "altitude",
+			"type": "int32_t"
+		}
+		]
+	},
+	{
+		"title": "ap_telem",
+		"description": "Autopilot telemetry packet",
+		"setting": "false",
+		"owner": "remote",
+		"ack_required": "false",
+		"fields": [{
+			"name": "armed",
+			"type": "uint8_t"
+		},
+		{
+			"name": "state",
+			"type": "AUTOPILOT_STATE"
+		},
+		{
+			"name": "mode",
+			"type": "AUTOPILOT_MODE"
+		},
+		{
+			"name": "selected_pitch_rate",
+			"type": "int16_t"
+		},
+		{
+			"name": "selected_roll_rate",
+			"type": "int16_t"
+		},
+		{
+			"name": "selected_pitch",
+			"type": "int16_t"
+		},
+		{
+			"name": "selected_roll",
+			"type": "int16_t"
+		},
+		{
+			"name": "selected_heading_rate",
+			"type": "int16_t"
+		},
+		{
+			"name": "selected_vert_speed",
+			"type": "int16_t"
+		},
+		{
+			"name": "selected_alt",
+			"type": "int32_t"
+		},
+		{
+			"name": "selected_lat",
+			"type": "float"
+		},
+		{
+			"name": "selected_lon",
+			"type": "float"
+		},
+		{
+			"name": "target_airspeed",
+			"type": "uint16_t"
+		}
+		]
+	},
+	{
+		"title": "systems_telem",
+		"description": "Systems telemetry",
+		"setting": "false",
+		"owner": "remote",
+		"ack_required": "false",
+		"fields": [{
+			"name": "avionics_volts",
+			"type": "uint16_t"
+		},
+		{
+			"name": "avionics_milliamps",
+			"type": "uint16_t"
+		},
+		{
+			"name": "servo_volts",
+			"type": "uint16_t"
+		},
+		{
+			"name": "servo_amps",
+			"type": "uint16_t"
+		},
+		{
+			"name": "payload_volts",
+			"type": "uint16_t"
+		},
+		{
+			"name": "payload_amps",
+			"type": "uint16_t"
+		}
+		]
+	},
+	{
+		"title": "ecu_telem",
+		"description": "Engine control unit telemetry",
+		"setting": "false",
+		"owner": "remote",
+		"ack_required": "false",
+		"fields": [{
+			"name": "rpm",
+			"type": "uint16_t"
+		},
+		{
+			"name": "cht",
+			"type": "int16_t"
+		}]
+	},
+	{
+		"title": "gps_telem",
+		"description": "GPS telemetry",
+		"setting": "false",
+		"owner": "remote",
+		"ack_required": "false",
+		"fields": [{
+			"name": "fix_type",
+			"type": "GPS_FIX_TYPE"
+		},
+		{
+			"name": "hdop",
+			"type": "float"
+		},
+		{
+			"name": "vdop",
+			"type": "float"
+		},
+		{
+			"name": "n_sats",
+			"type": "uint8_t"
+		}
+		]
+	},
+	{
+		"title": "pid_telem",
+		"description": "PID loop telemetry",
+		"setting": "false",
+		"owner": "remote",
+		"ack_required": "false",
+		"fields": [{
+			"name": "loop_id",
+			"type": "PID_LOOP"
+		},
+		{
+			"name": "setpoint",
+			"type": "float"
+		},
+		{
+			"name": "measurement",
+			"type": "float"
+		},
+		{
+			"name": "output",
+			"type": "float"
+		},
+		{
+			"name": "integral",
+			"type": "float"
+		}
+		]
+	},
+	{
+		"title": "start_pid_telem",
+		"description": "starts telemetry from a PID loop",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [{
+			"name": "loop_id",
+			"type": "PID_LOOP"
+		}]
+	},
+	{
+		"title": "heartbeat",
+		"description": "Heartbeat packet is used by the aircraft to determine if the datalink is working",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "false",
+		"fields": []
+	},
+	{
+		"title": "arm_system",
+		"description": "Arms the system",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "takeoff",
+		"description": "tells the autopilot to start taking off",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "ap_mode",
+		"description": "Sets the autopilot mode",
+		"setting": "true",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [{
+			"name": "autopilot_mode",
+			"type": "AUTOPILOT_MODE"
+		}]
+	},
+	{
+		"title": "get_ap_mode",
+		"description": "Gets the autopilot mode setting",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "magnetic_declination",
+		"description": "Sets magnetic declination, in degrees",
+		"setting": "true",
+		"owner": "both",
+		"ack_required": "true",
+		"fields": [{
+			"name": "mag_dec",
+			"type": "float"
+		}]
+	},
+	{
+		"title": "get_magnetic_declination",
+		"description": "Gets magnetic declination in degrees",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "home_coordinates",
+		"description": "The home point coordinates in degrees",
+		"setting": "false",
+		"owner": "both",
+		"ack_required": "true",
+		"fields": [{
+			"name": "lat",
+			"type": "float"
+		},
+		{
+			"name": "lon",
+			"type": "float"
+		},
+		{
+			"name": "baro_alt",
+			"type": "float"
+		}
+		]
+	},
+	{
+		"title": "set_home_point",
+		"description": "sets the home lat/lon from the current location",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "altitude_ref",
+		"description": "The home point altitude. This is what an altimeter would say if it were at the home position with the dail set to 1013.25mb",
+		"setting": "false",
+		"owner": "both",
+		"ack_required": "true",
+		"fields": [{
+			"name": "alt_setting",
+			"type": "float"
+		}]
+	},
+	{
+		"title": "get_altitude_ref",
+		"description": "Gets the home point altitude",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "zero_altimeter",
+		"description": "Asks the autopilot to set the home altitude to barometric altitude",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "enable_stab_autotune",
+		"description": "Starts autotune for the stabilisation (pitch & roll) PID loops",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [{
+			"name": "enable",
+			"type": "uint8_t"
+		}]
+	},
+	{
+		"title": "speed_settings",
+		"description": "Airspeed settings that specify performance parameters of the aircraft such as stall speed, max speed",
+		"setting": "true",
+		"owner": "both",
+		"ack_required": "true",
+		"fields": [{
+			"name": "stall_speed",
+			"type": "float",
+			"units": "m/s",
+			"min-val": 0,
+			"max-val": 1000
+		},
+		{
+			"name": "min_speed",
+			"type": "float",
+			"units": "m/s",
+			"min-val": 0,
+			"max-val": 100
+		},
+		{
+			"name": "min_throttle",
+			"type": "uint8_t",
+			"units": "%",
+			"min-val": 0,
+			"max-val": 100
+		},
+		{
+			"name": "rotation_speed",
+			"type": "float",
+			"units": "m/s",
+			"min-val": 0,
+			"max-val": 100
+		},
+		{
+			"name": "climb_speed",
+			"type": "float"
+		},
+		{
+			"name": "climb_throttle",
+			"type": "uint8_t"
+		},
+		{
+			"name": "descend_speed",
+			"type": "float"
+		},
+		{
+			"name": "descend_throttle",
+			"type": "uint8_t"
+		},
+		{
+			"name": "cruise_speed",
+			"type": "float"
+		},
+		{
+			"name": "cruise_throttle",
+			"type": "uint8_t"
+		},
+		{
+			"name": "dash_speed",
+			"type": "float"
+		},
+		{
+			"name": "dash_throttle",
+			"type": "uint8_t"
+		},
+		{
+			"name": "max_speed",
+			"type": "float"
+		}
+		]
+	},
+	{
+		"title": "get_speed_settings",
+		"description": "Tells the AP to send speed settings",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "stab_gains",
+		"description": "PID gains for the pitch and roll stabilisation loops",
+		"setting": "true",
+		"owner": "both",
+		"ack_required": "true",
+		"fields": [{
+			"name": "pitch_kp",
+			"type": "float"
+		},
+		{
+			"name": "pitch_ki",
+			"type": "float"
+		},
+		{
+			"name": "pitch_kd",
+			"type": "float"
+		},
+		{
+			"name": "pitch_dd",
+			"type": "float"
+		},
+		{
+			"name": "roll_kp",
+			"type": "float"
+		},
+		{
+			"name": "roll_ki",
+			"type": "float"
+		},
+		{
+			"name": "roll_kd",
+			"type": "float"
+		},
+		{
+			"name": "rudder_kp",
+			"type": "float"
+		},
+		{
+			"name": "rudder_ki",
+			"type": "float"
+		},
+		{
+			"name": "rudder_kd",
+			"type": "float"
+		},
+		{
+			"name": "rudder_dd",
+			"type": "float"
+		}
+		]
+	},
+	{
+		"title": "get_stab_gains",
+		"description": "Gets the stab_gains from the AP",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "rudder_gains",
+		"description": "PID gains for the rudder control loop",
+		"setting": "true",
+		"owner": "both",
+		"ack_required": "true",
+		"fields": [{
+			"name": "yaw_rate_gain",
+			"type": "float"
+		}]
+	},
+	{
+		"title": "get_rudder_gains",
+		"description": "PID gains for the rudder control loop",
+		"setting": "false",
+		"owner": "both",
+		"ack_required": "true",
+		"fields": [
+
+		]
+	},
+	{
+		"title": "throttle_gains",
+		"description": "Throttle PID loop gains",
+		"setting": "true",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [{
+			"name": "throttle_kp",
+			"type": "float"
+		},
+		{
+			"name": "throttle_ki",
+			"type": "float"
+		},
+		{
+			"name": "throttle_kd",
+			"type": "float"
+		}
+		]
+	},
+	{
+		"title": "get_throttle_gains",
+		"description": "Gets the throttle PID loop gains",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "ecs_gains",
+		"description": "Energy control system parameters",
+		"setting": "true",
+		"owner": "both",
+		"ack_required": "true",
+		"fields": [{
+			"name": "altitude_p_gain",
+			"type": "float"
+		},
+		{
+			"name": "airspeed_pitch_p_gain",
+			"type": "float"
+		},
+		{
+			"name": "airspeed_pitch_i_gain",
+			"type": "float"
+		},
+		{
+			"name": "vs_p_gain",
+			"type": "float"
+		},
+		{
+			"name": "vs_i_gain",
+			"type": "float"
+		},
+		{
+			"name": "vs_i_limit",
+			"type": "float"
+		},
+		{
+			"name": "max_climb_vs",
+			"type": "uint16_t"
+		},
+		{
+			"name": "max_descend_vs",
+			"type": "uint16_t"
+		},
+		{
+			"name": "climb_throttle_dd",
+			"type": "float"
+		},
+		{
+			"name": "climb_margin",
+			"type": "uint8_t"
+		},
+		{
+			"name": "climb_speed_changes",
+			"type": "uint8_t"
+		},
+		{
+			"name": "use_stall_mode",
+			"type": "uint8_t"
+		}
+		]
+	},
+	{
+		"title": "get_ecs_gains",
+		"description": "Energy control system parameters",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "takeoff_settings",
+		"description": "Takeoff settings",
+		"setting": "true",
+		"owner": "both",
+		"ack_required": "true",
+		"fields": [{
+			"name": "takeoff_throttle",
+			"type": "uint8_t"
+		},
+		{
+			"name": "climbout_alt",
+			"type": "uint16_t"
+		},
+		{
+			"name": "takeoff_pitch",
+			"type": "float"
+		},
+		{
+			"name": "nws_gain",
+			"type": "float"
+		}]
+	},
+	{
+		"title": "get_takeoff_settings",
+		"description": "gets the takeoff settings",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "nav_settings",
+		"description": "sets gains for navigation",
+		"setting": "true",
+		"owner": "both",
+		"ack_required": "true",
+		"fields": [{
+			"name": "heading_p_gain",
+			"type": "float"
+		},
+		{
+			"name": "bank_limit_distance",
+			"type": "float"	
+		},
+		{
+			"name": "waypoint_radius",
+			"type": "float"
+		}
+		]
+	},
+	{
+		"title": "get_nav_settings",
+		"description": "gets the nav settings",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "landing_settings",
+		"description": "Landing settings",
+		"setting": "true",
+		"owner": "both",
+		"ack_required": "true",
+		"fields": [{
+			"name": "flare_throttle",
+			"type": "int8_t"
+		},
+		{
+			"name": "flare_height",
+			"type": "float"
+		}]
+	},
+	{
+		"title": "get_landing_settings",
+		"description": "gets the landing settings",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "set_waypoint",
+		"description": "sets the lat/lon of a waypoint",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [{
+			"name": "num",
+			"type": "uint16_t"
+		},
+		{
+			"name": "lat",
+			"type": "float"
+		},
+		{
+			"name": "lon",
+			"type": "float"
+		}]
+	},
+	{
+		"title": "route_end_action",
+		"description": "Action to take at the last waypoint of the route",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [{
+			"name": "action",
+			"type": "ACTION"
+		},
+		{
+			"name": "parameter",
+			"type": "uint32_t"
+		}
+		]
+	},
+	{
+		"title": "clear_waypoints",
+		"description": "Removes all waypoints from memory",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [
+
+		]
+	},
+	{
+		"title": "enter_loiter_mode",
+		"description": "Enters the aircraft into loiter mode",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [
+			{
+				"name": "radius",
+				"type": "uint32_t"
+			},
+			{
+				"name": "clockwise",
+				"type": "uint8_t"
+			}
+		]
+	},
+	{
+		"title": "set_loiter_pos",
+		"description": "Sets the loiter position",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [
+			{
+				"name": "lat",
+				"type": "float"
+			},
+			{
+				"name": "lon",
+				"type": "float"
+			}]
+	},
+	{
+		"title": "resume_mission",
+		"description": "Exits loiter mode and returns the aircraft to the mission",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "start_engine",
+		"description": "Starts the engine",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "stop_engine",
+		"description": "Stops the engine",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "set_target_altitude",
+		"description": "sets the target altitude",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [{
+			"name": "target_alt",
+			"type": "float"
+		}]
+	},
+	{
+		"title": "set_target_airspeed",
+		"description": "sets the target airspeed",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [{
+			"name": "target_speed",
+			"type": "float"
+		}]
+	},
+	{
+		"title": "fault_report",
+		"description": "The autopilot can report a fault directly by sending a human readable string",
+		"setting": "false",
+		"owner": "remote",
+		"ack_required": "true",
+		"fields": [{
+			"name": "message",
+			"type": "etk::StaticString<220>"
+		}]
+	},
+	{
+		"title": "land_at_home",
+		"description": "Land at takeoff point in the takeoff direction using default circuit direction.",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	},
+	{
+		"title": "land",
+		"description": "land at a location",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": [{
+			"name": "lat",
+			"type": "float"
+		},
+		{
+			"name": "lon",
+			"type": "float"
+		},
+		{
+			"name": "heading",
+			"type": "float"
+		},
+		{
+			"name": "circuit_direction",
+			"type": "uint8_t"
+		},
+		{
+			"name": "alt_amsl",
+			"type": "float"
+		}]
+	},
+	{
+		"title": "go_around",
+		"description": "aborts the landing",
+		"setting": "false",
+		"owner": "local",
+		"ack_required": "true",
+		"fields": []
+	}
+	]
+}
+
+
